@@ -1,6 +1,12 @@
 import SignUpForm from "@/components/signup.form";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign Up - QuickEvent",
+  description: "Create an account to get started.",
+};
 
 export default function SignInPage() {
   return (
@@ -19,7 +25,7 @@ export default function SignInPage() {
             Create Your Account
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Sign in to continue where you left off.
+            Sign up to join us and explore more.
           </p>
         </div>
 

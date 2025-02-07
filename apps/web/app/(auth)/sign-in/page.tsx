@@ -1,6 +1,12 @@
 import SignInForm from "@/components/signin.form";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign In - QuickEvent",
+  description: "Sign in to access your account.",
+};
 
 export default function SignInPage() {
   return (
@@ -19,7 +25,7 @@ export default function SignInPage() {
             Welcome Back
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Sign up to join us and explore more.
+            Sign in to continue where you left off.
           </p>
         </div>
 

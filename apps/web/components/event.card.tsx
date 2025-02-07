@@ -17,7 +17,7 @@ export default function EventCard() {
           <h1 className="text-lg font-bold dark:text-black">
             Lunar New Year - Mulan Stage Show
           </h1>
-          <p className="text-black">19 January 2025</p>
+          <p className="text-slate-600">19 January 2025 - 2 February 2025</p>
           <p className="font-bold dark:text-black">{price(5000000)}</p>
         </div>
         <div className="mt-2">

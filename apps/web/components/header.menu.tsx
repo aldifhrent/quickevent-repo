@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { Compass } from "lucide-react";
 import Profile from "./profile";
-import { ThemeButton } from "./theme.button";
 
 interface HeaderMenuProps {
   session: any;
@@ -19,21 +18,13 @@ export default function HeaderMenu({ session }: HeaderMenuProps) {
           size={20}
           className="text-black hover:animate-spin hover:text-black dark:text-white"
         />
-        <p className="xl:text-md inline-block text-sm font-semibold text-black dark:text-white">
-          Explore
+        <p className="xl:text-md inline-block text-sm font-semibold text-black dark:text-white text-nowrap">
+          Explore Events
         </p>
       </Link>
 
       {session ? (
         <div className="flex items-center gap-2">
-          <Link
-            href="/organizer/create-event"
-            className="flex max-w-[200px] flex-nowrap items-center gap-2 rounded-md bg-black p-3 text-white hover:cursor-pointer dark:bg-white dark:text-black"
-          >
-            <p className="xl:text-md inline-block text-nowrap text-sm font-semibold">
-              Create Event
-            </p>
-          </Link>
           <Profile
             profileId={session?.user?.id || ""}
             name={session?.user?.name || "User"}
@@ -44,14 +35,23 @@ export default function HeaderMenu({ session }: HeaderMenuProps) {
           />
         </div>
       ) : (
-        <Link
-          href="/sign-in"
-          className="xl:text-md cursor-pointer text-sm hover:underline"
-        >
-          Sign In
-        </Link>
+        <div className="flex gap-2 items-center">
+          <Link
+            href="/sign-in"
+            className="xl:text-md cursor-pointer text-sm hover:underline"
+          >
+            Sign In
+          </Link>
+          /
+          <Link
+            href="/sign-up"
+            className="xl:text-md cursor-pointer text-sm hover:underline"
+          >
+            Sign Up
+          </Link>
+        </div>
       )}
-      <ThemeButton className="hidden xl:flex" />
+      {/* <ThemeButton className="hidden xl:flex" /> */}
     </nav>
   );
 }

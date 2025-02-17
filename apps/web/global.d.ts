@@ -6,8 +6,11 @@ declare module "next-auth" {
     name?: string | null | undefined;
     email?: string | null | undefined;
     imageUrl?: string | null | undefined;
+    organizerId?: string | null | undefined;
+    organizerName?: string | null | undefined;
     provider?: string | null | undefined;
     access_token?: string | undefined;
+    refresh_token?: string | undefined;
     role?: string | undefined;
   }
   interface Session {
@@ -15,14 +18,10 @@ declare module "next-auth" {
   }
 }
 import { JWT } from "next-auth/jwt";
+
 declare module "next-auth/jwt" {
   export interface JWT {
-    id?: string | undefined;
-    name?: string | null | undefined;
-    email?: string | null | undefined;
-    imageUrl?: string | null | undefined;
-    provider?: string | null | undefined;
     access_token?: string | undefined;
-    role?: string | undefined;
+    refresh_token?: string | undefined;
   }
 }

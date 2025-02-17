@@ -5,6 +5,15 @@ const nextConfig = {
       {
         hostname: "assets.loket.com",
       },
+      {
+        hostname: "via.placeholder.com",
+      },
+      {
+        hostname: "upload.wikimedia.org",
+      },
+      {
+        hostname: "example.com",
+      },
     ],
   },
 };

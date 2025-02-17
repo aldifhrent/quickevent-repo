@@ -15,25 +15,23 @@ export default function Header() {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
+
   const { data: session } = useSession();
+
   return (
     <div className="border-b dark:border-b-white">
       <header className="relative flex h-16 items-center justify-between px-4 sm:px-12">
-        <div className="flex items-center gap-8">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.svg"
-              width={100}
-              height={100}
-              alt="Image Logo"
-              className="inline-block h-[100px] w-[50px]"
-            />
-          </Link>
+        <Link href="/">
+          <Image
+            src="/logo.svg"
+            width={50}
+            height={50}
+            alt="Image Logo"
+            className=" h-[100px] w-[50px]"
+          />
+        </Link>
 
-          {/* Search Bar */}
-          <SearchInput />
-        </div>
+        <SearchInput />
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}

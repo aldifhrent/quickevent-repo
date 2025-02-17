@@ -1,38 +1,43 @@
-import NextAuth, { User, Session } from "next-auth";
+/* eslint-disable turbo/no-undeclared-env-vars */
+import NextAuth, { User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { login } from "./lib/auth";
-import { JWT } from "next-auth/jwt";
-
+import { login, refreshToken } from "./lib/auth";
+import { jwtDecode } from "jwt-decode";
+import GoogleProvider from "next-auth/providers/google";
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  pages: {
-    signIn: "/sign-in",
-  },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 * 2, // 1 hour
-    updateAge: 0,
+    maxAge: 60 * 60 * 24 * 7,
+  },
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        domain: process.env.AUTH_DOMAIN as string,
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+      },
+    },
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     Credentials({
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-
         try {
           const user = await login(credentials);
-          if (!user)
-            console.log(
-              "AUTH.TS",
-              "Login gagal, periksa kembali kredensial Anda"
-            );
 
           return user;
         } catch (error) {
+          console.timeEnd("Login Request");
           console.error("Authorization error:", error);
           return null;
         }
@@ -46,36 +51,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return true;
     },
-
-    async jwt({ token, user }: { token: JWT; user: User | null }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
-        // Update token with user data
-        return {
-          ...token,
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          imageUrl: user.imageUrl,
-          role: user.role,
-          provider: user.provider,
-          access_token: user.access_token,
-        };
+        const { access_token, refresh_token } = user;
+        return { access_token, refresh_token };
+      } else if (token?.refresh_token || trigger == "update") {
+        const newToken = await refreshToken();
+        console.log(newToken);
+        return newToken;
       }
       return token;
     },
 
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (token) {
-        // Always set session from token data
-        session.user = {
-          id: token.id,
-          email: token.email,
-          name: token.name,
-          imageUrl: token.imageUrl,
-          role: token.role,
-          provider: token.provider,
-          access_token: token.access_token,
-        };
+    async session({ session, token }) {
+      if (token.access_token) {
+        const user = jwtDecode(token.access_token!) as User;
+        session.user.id = user.id as string;
+        session.user.email = user.email as string;
+        session.user.name = user.name as string;
+        session.user.imageUrl = user.imageUrl as string;
+        session.user.role = user.role as string;
+        session.user.access_token = token.access_token as string;
+        session.user.organizerId = user.organizerId as string;
       }
       return session;
     },

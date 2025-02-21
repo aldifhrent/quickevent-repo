@@ -58,6 +58,7 @@ export type loginValues = z.infer<typeof loginSchema>;
 
 export const changeProfileSchema = z
   .object({
+    imageUrl: z.string().optional(),
     name: z.string().optional(),
     password: z.string().optional(),
     confirmPassword: z.string().optional(),

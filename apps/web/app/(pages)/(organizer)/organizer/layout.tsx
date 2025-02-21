@@ -8,7 +8,7 @@ export default function OrganizerLayout({
   return (
     <div>
       <Header />
-      <div>{children}</div>
+      {children}
     </div>
   );
 }

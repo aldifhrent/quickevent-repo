@@ -1,81 +1,123 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
-  FormControl,
   FormField,
+  FormControl,
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changeProfileSchema, changeProfileValues } from "@/schema/user";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { uploadAvatar } from "@/app/actions/upload";
+
 const ProfilePage = () => {
   const { data: session, update } = useSession();
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const form = useForm({
     resolver: zodResolver(changeProfileSchema),
     defaultValues: {
+      imageUrl: "",
       name: "",
       password: "",
       confirmPassword: "",
     },
   });
 
+  // Set initial values for form when session is available
   useEffect(() => {
     if (session?.user) {
       form.reset({
+        imageUrl: session.user.imageUrl || "",
         name: session.user.name || "",
         password: "",
         confirmPassword: "",
       });
+      // Set initial image from session (if any)
+      setImagePreview(session?.user?.imageUrl || null);
     }
-  }, [form.reset, form, session?.user]);
+  }, [form.reset, session?.user]);
+
+  // Handle image upload and preview
+  const handleImageClick = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.click();
+
+    fileInput.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        setSelectedFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string); // Set the image preview
+        };
+        reader.readAsDataURL(file); // Read the file as a data URL
+      }
+    };
+  };
 
   const handleSubmit = async (values: changeProfileValues) => {
     try {
-      // Check if the session is valid
+      setLoading(true);
       if (!session?.user?.access_token) {
-        toast.error({
-          variant: "destructive",
-          description: "Session expired. Please log in again.",
-        });
+        toast.error("Session expired. Please log in again.");
         router.push("/sign-in");
         return;
       }
 
+      // Buat objek data untuk update profil
+      const updateProfileData = { ...values };
+
+      // Hanya upload gambar jika ada file yang dipilih
+      if (selectedFile) {
+        const toastId = toast.loading("Uploading image...");
+
+        // Jika ada file yang dipilih, upload gambar
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+        await uploadAvatar(formData, session?.user.access_token);
+
+        toast.success("Image uploaded successfully!", { id: toastId });
+
+        // Perbarui imageUrl setelah upload berhasil
+        updateProfileData.imageUrl = imagePreview || "";
+      }
+
+      // Kirim update profil (termasuk nama, password)
       await api(
         "/auth/profile",
         "PATCH",
-        { body: values, contentType: "application/json" },
+        { body: updateProfileData, contentType: "application/json" },
         session?.user.access_token
       );
 
+      // Perbarui session untuk mencerminkan perubahan
       await update();
-
+      window.location.reload();
       toast.success("Profile updated successfully!");
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        toast({
-          variant: "destructive",
-          description: error.response.data?.message || "Something went wrong",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          description: "Something went wrong",
-        });
-      }
+      // toast({
+      //   variant: "destructive",
+      //   description: "Something went wrong",
+      // });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,16 +125,24 @@ const ProfilePage = () => {
     <div className="min-h-screen mt-20">
       <div className="container flex flex-col items-center justify-center mx-auto p-6 max-w-3xl">
         <div className="bg-white p-8 rounded-lg shadow-sm flex flex-col items-center text-center">
-          <Image
-            src={
-              session?.user?.imageUrl ||
-              "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-            }
-            alt="Profile"
-            width={100}
-            height={100}
-            className="w-32 h-32 rounded-full object-cover border-2 border-gray-200"
-          />
+          {/* Display the preview image or session image */}
+          <div
+            onClick={handleImageClick}
+            className="cursor-pointer w-[100px] h-[100px] rounded-full border-2 border-[#E5E7EB] overflow-hidden"
+          >
+            {imagePreview ? (
+              <Image
+                src={imagePreview}
+                alt="Profile"
+                width={100}
+                height={100}
+                className="object-cover w-full h-full" // Memastikan gambar memenuhi kontainer bundar
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-300"></div> // Tampilan default jika gambar belum ada
+            )}
+          </div>
+
           <h1 className="mt-4 text-2xl font-semibold text-gray-800">
             {session?.user?.name}
           </h1>

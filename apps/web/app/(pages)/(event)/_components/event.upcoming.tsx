@@ -1,26 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEvents } from "@/hooks/events";
 import EventCard from "./event.card";
 import useEmblaCarousel from "embla-carousel-react";
 
-export default function UpcomingEvents() {
-  const { upcomingEvents, isLoading, error } = useEvents();
-  if (error) {
-    return (
-      <Card className="p-6 text-center">
-        <p className="text-red-500">{error}</p>
-        <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-          Try Again
-        </button>
-      </Card>
-    );
-  }
+interface UpcomingEventsProps {
+  upcomingEvents: any[];
+  isLoading: boolean;
+  error: string | null;
+}
 
+export default function UpcomingEvents({
+  upcomingEvents,
+  isLoading,
+  error,
+}: UpcomingEventsProps) {
   return (
     <Card className="w-full p-8">
       <h2 className="text-xl font-bold">Upcoming Event</h2>
@@ -28,6 +23,8 @@ export default function UpcomingEvents() {
       <div className="mt-10">
         {isLoading ? (
           <SkeletonLoader />
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
         ) : upcomingEvents.length === 0 ? (
           <p className="text-center text-gray-500">No events found</p>
         ) : (
@@ -53,8 +50,8 @@ function SkeletonLoader() {
 }
 
 function EventSlider({ events }: { events: any[] }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true, // Pastikan loop diaktifkan
+  const [emblaRef] = useEmblaCarousel({
+    loop: true,
     dragFree: true,
     align: "start",
     dragThreshold: 1,
@@ -66,7 +63,7 @@ function EventSlider({ events }: { events: any[] }) {
         <div className="flex gap-4 [&>*]:shrink-0 [&>*]:basis-[80%] sm:[&>*]:basis-[50%] md:[&>*]:basis-[33.3333%] lg:[&>*]:basis-[25%] xl:[&>*]:basis-[20%]">
           {events.map((event) => (
             <div key={event.id} className="p-2">
-              <EventCard {...event} />
+              <EventCard {...event} imageUrl={event.imageUrl} />
             </div>
           ))}
         </div>

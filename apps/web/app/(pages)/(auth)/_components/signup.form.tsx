@@ -39,8 +39,9 @@ export default function SignUpForm() {
   const onSubmit = async (values: registerValues) => {
     try {
       setLoading(true);
-      await api("/new", "POST", {
+      await api("/auth/new", "POST", {
         body: values,
+        contentType: "application/json",
       });
       router.push("/sign-in");
       toast.success("Sign Up Successfully");
@@ -50,13 +51,10 @@ export default function SignUpForm() {
         // Mengambil pesan error dari response
         const errorMessage =
           error.response?.data?.message || "Something went wrong";
-        toast.error(error.message);
+        toast.error(errorMessage);
       } else {
         // Fallback untuk error non-Axios
-        toast({
-          variant: "destructive",
-          description: "An unexpected error occurred",
-        });
+        toast.error("An unexpected error occurred");
       }
     } finally {
       setLoading(false);

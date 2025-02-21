@@ -18,7 +18,7 @@ export default function HeaderMenu({ session }: HeaderMenuProps) {
           size={20}
           className="text-black hover:animate-spin hover:text-black dark:text-white"
         />
-        <p className="xl:text-md inline-block text-sm font-semibold text-black dark:text-white text-nowrap">
+        <p className="xl:text-md inline-block text-md font-semibold text-black dark:text-white text-nowrap">
           Explore Events
         </p>
       </Link>

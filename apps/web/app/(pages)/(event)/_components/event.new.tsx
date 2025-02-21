@@ -7,15 +7,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEvents } from "@/hooks/events";
 import EventCard from "./event.card";
 import useEmblaCarousel from "embla-carousel-react";
-import { Event } from "@/types/types";
 
-export default function NewEvents() {
-  const { newEvents, isLoading, error } = useEvents();
+interface NewEventProps {
+  newEvents: any[];
+  isLoading: boolean;
+  error: string | null;
+}
 
-  if (error) {
+export default function NewEvents(props: NewEventProps) {
+  if (props.error) {
     return (
       <Card className="p-6 text-center">
-        <p className="text-red-500">{error}</p>
+        <p className="text-red-500">{props.error}</p>
         <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
           Try Again
         </button>
@@ -28,12 +31,12 @@ export default function NewEvents() {
       <h2 className="text-xl font-bold">New Event</h2>
 
       <div className="mt-10">
-        {isLoading ? (
+        {props.isLoading ? (
           <SkeletonLoader />
-        ) : newEvents.length === 0 ? (
+        ) : props.error ? (
           <p className="text-center text-gray-500">No events found</p>
         ) : (
-          <EventSlider events={newEvents} />
+          <EventSlider events={props.newEvents} />
         )}
       </div>
     </Card>

@@ -1,4 +1,5 @@
 import { Globe, Twitter } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -6,12 +7,12 @@ export default function Hero() {
       <div className="flex justify-between">
         <div className="flex flex-col items-start">
           <div className="mb-6 ml-0.5 flex w-fit space-x-4 rounded-full bg-black px-3 py-2 text-white dark:bg-white dark:text-black">
-            <a href="#" className="hover:animate-shake">
+            <Link href="/" className="hover:animate-shake">
               <Globe />
-            </a>
-            <a href="#" className="hover:animate-shake">
+            </Link>
+            <Link href="#" className="hover:animate-shake">
               <Twitter />
-            </a>
+            </Link>
           </div>
           <div className="flex flex-col items-start">
             <h1 className="text-nowrap p-2 text-7xl font-bold hover:cursor-pointer hover:rounded-lg hover:bg-black hover:text-white hover:dark:bg-white dark:hover:text-black xl:text-8xl">

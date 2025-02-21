@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "assets.loket.com",
+        hostname: "res.cloudinary.com",
       },
       {
         hostname: "via.placeholder.com",
@@ -13,6 +13,9 @@ const nextConfig = {
       },
       {
         hostname: "example.com",
+      },
+      {
+        hostname: "assets.loket.com",
       },
     ],
   },

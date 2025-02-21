@@ -26,7 +26,6 @@ interface ProfileProps {
 
 export default function Profile({ name, imageUrl, profileId }: ProfileProps) {
   const { organizer } = useOrganizer();
-  console.log(organizer);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex w-full cursor-pointer items-center gap-1 rounded-full p-1 text-center hover:bg-slate-100">
@@ -50,11 +49,10 @@ export default function Profile({ name, imageUrl, profileId }: ProfileProps) {
                 {organizer.map((org: Organizer) => (
                   <DropdownMenuItem key={org.id}>
                     <Link
-                      target="_blank"
-                      href={`/organizer/${org.slug}/dashboard`}
+                      href={`/organizer/${org.id}/dashboard`}
                       className="w-full"
                     >
-                      {org.organizerName}
+                      Dashboard
                     </Link>
                   </DropdownMenuItem>
                 ))}

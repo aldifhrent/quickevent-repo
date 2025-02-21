@@ -11,29 +11,73 @@ export interface Events {
   registrationStartDate: Date;
   registrationEndDate: Date;
   eventStartDate: Date;
+  location: string;
   eventEndDate: Date;
   price: number;
-  availableSeats: number;
+  attendedEvent: number;
   totalTicket: number;
   ticketType: Ticket;
   organizerId: string;
   createdAt: Date;
   updatedAt: Date;
   userId: string | null;
-  organizer: Organizer;
-  Category: Category[];
-}
-
-export interface Category {
-  id: string;
-  name: string;
+  organizer: Organizer,
+  category: string
 }
 
 export interface Organizer {
-  [x: string]: any;
   id: string;
-  slug?: string;
+  slug: string;
   organizerId: string;
   organizerName: string;
-  logoUrl: string;
+  logoUrl: string | null;
+  totalEvents?: number;
+}
+
+export interface Transactions {
+  id: string;
+  totalAmount: number;
+  pointUsed: 0;
+  status: string;
+  quantity: number;
+  paymentProof: string;
+  userId: string;
+  eventId: string;
+  createdAt: string;
+  updatedAt: string
+  user: {
+    name: string;
+    email: string;
+  }
+}
+
+export interface EventAnalytics {
+  eventTitle: string;
+  totalTickets: number;
+  attendedCount: number;
+  nonAttendedCount: number;
+  attendanceRate: string;
+}
+
+export interface SummaryAnalytics {
+  totalTickets: number;
+  totalAttended: number;
+  totalNonAttended: number;
+  overallAttendanceRate: string;
+}
+
+export interface AnalyticsData {
+  events: EventAnalytics[];
+  summary: SummaryAnalytics;
+}
+
+export interface BarChartProps {
+  data: AnalyticsData
+}
+export interface SummaryChartProps {
+  data: AnalyticsData
+}
+export interface PieChartProps {
+  name: string;
+  value: number;
 }

@@ -1,4 +1,5 @@
 import EventList from "@/app/(pages)/(event)/_components/event.list";
+import Footer from "@/components/footer";
 import Hero from "@/components/hero";
 
 export default function Home() {
@@ -6,8 +7,8 @@ export default function Home() {
     <div>
       <main className="flex min-h-screen flex-col">
         <Hero />
-        {/* <Category /> */}
         <EventList />
+        <Footer />
       </main>
     </div>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 
@@ -14,7 +16,7 @@ export const useEvents = () => {
 
       const response = await api(`/events?type=${type}`, "GET");
       console.log("FETCH EVENT", response.data);
-      if (response.data.success) {
+      if (response.data) {
         if (type === "upcoming") {
           setUpcomingEvents(response.data);
         } else if (type === "new") {

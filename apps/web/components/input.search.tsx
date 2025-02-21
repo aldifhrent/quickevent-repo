@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { api } from "@/lib/api";
 import { Events } from "@/types/types";
+import Link from "next/link";
 
 export default function SearchInput() {
   const [query, setQuery] = useState("");
@@ -25,7 +26,7 @@ export default function SearchInput() {
       setLoading(true);
       try {
         const response = await api("/events", "GET");
-        if (response.data.success) {
+        if (response.data) {
           setEvents(response.data);
         } else {
           console.error("Failed to fetch events:", response.data.message);
@@ -67,11 +68,12 @@ export default function SearchInput() {
   }, [handleKeyPress]);
 
   return (
-    <div className="relative flex items-center rounded-full">
+    <div className="hidden sm:flex items-center rounded-full relative">
       {/* Input */}
       <Input
         ref={inputRef}
         type="text"
+        disabled={loading}
         className="2xl:full h-10 w-[300px] rounded-full border-2 px-4 pl-12 shadow-2xl outline-none placeholder:text-slate-300 sm:w-[300px] md:w-[600px] lg:w-[600px] xl:w-[800px]"
         placeholder="Search events..."
         value={query}
@@ -98,13 +100,13 @@ export default function SearchInput() {
               <div key={event.id} className="p-2 border-b">
                 <div className="font-bold">
                   {/* Tambahkan link ke halaman event dengan slug */}
-                  <a
+                  <Link
                     href={`/event/${event.slug}`}
                     target="_blank"
                     className="text-blue-500 hover:text-blue-700"
                   >
                     {event.title}
-                  </a>
+                  </Link>
                 </div>
                 <div>{event.description}</div>
               </div>

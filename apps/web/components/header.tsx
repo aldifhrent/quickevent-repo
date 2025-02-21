@@ -27,7 +27,7 @@ export default function Header() {
             width={50}
             height={50}
             alt="Image Logo"
-            className=" h-[100px] w-[50px]"
+            className="h-[100px] w-[50px] max-h-[100px] max-w-[50px]"
           />
         </Link>
 

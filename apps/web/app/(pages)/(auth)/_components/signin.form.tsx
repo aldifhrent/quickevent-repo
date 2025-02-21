@@ -48,29 +48,17 @@ export default function SignInForm() {
         if (result.error === "CredentialsSignin") {
           errorMessage = "Email atau password salah";
         }
-        toast.error({
-          variant: "destructive",
-          description: errorMessage,
-        });
+        toast.error(errorMessage);
       } else {
-        toast.success({
-          variant: "default",
-          description: "Signed in successfully",
-        });
+        toast.success("Signed in successfully");
         router.push(result?.url || "/");
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const message = error.response.data.message || "Something went wrong";
-        toast({
-          variant: "destructive",
-          description: message,
-        });
+        toast.error(message);
       } else {
-        toast({
-          variant: "destructive",
-          description: "Something went wrong",
-        });
+        toast.error("Something went wrong");
       }
     } finally {
       setLoading(false);

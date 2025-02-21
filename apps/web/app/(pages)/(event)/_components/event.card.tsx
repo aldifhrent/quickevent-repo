@@ -6,52 +6,52 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { Card } from "../../../../components/ui/card";
 import { Events } from "@/types/types";
+
 export default function EventCard(props: Events) {
   return (
-    <Card className="w-[300px] h-full flex flex-col gap-10 rounded-lg shadow-lg">
-      <Link
-        href={`/event/${props.slug}`}
-        className="h-full w-full flex flex-col hover:shadow-xl"
-      >
-        <div className="flex flex-col rounded-lg gap-4 h-full">
+    <Card className="w-[300px] overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <Link href={`/event/${props.slug}`} className="flex h-full flex-col">
+        <div className="relative">
           <Image
-            src="https://assets.loket.com/neo/production/images/banner/20250106145852_677b8d3c5232e.jpg"
+            src={props.imageUrl}
             width={400}
             height={330}
-            className="w-full rounded-lg rounded-bl-none rounded-br-none"
-            alt="Event Card"
+            className="aspect-video w-full object-fill"
+            alt={props.title}
           />
-          <div className="flex flex-col gap-4 p-4">
-            <h1 className="text-lg font-bold dark:text-black text-nowrap">
-              {props.title}
-            </h1>
-            <p className="text-slate-600">
-              {format(props.eventStartDate, "dd MMMM yyyy")} -{" "}
-              {format(props.eventEndDate, "dd MMMM yyyy")}
-            </p>
-            <p className="font-bold dark:text-black text-xl">
-              {price(props.price)}
-            </p>
-          </div>
-          <div className="mt-auto">
-            {" "}
-            {/* Pastikan bagian ini ada di bawah */}
-            <hr />
-            <div className="mb-2 mt-2">
-              <div className="flex w-full items-center justify-start gap-2 p-2">
-                <Avatar>
-                  <AvatarImage
-                    src={
-                      props.organizer?.logoUrl ||
-                      "https://images.unsplash.com/photo-1737111869094-80ed40daca91?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw2fHx8ZW58MHx8fHx8"
-                    }
-                    className="w-full"
-                  />
-                </Avatar>
-                <p className="dark:text-black">
-                  {props.organizer?.organizerName}
-                </p>
-              </div>
+          <span
+            className={`absolute right-2 top-2 rounded-full px-3 py-1 text-xs font-medium ${
+              props.attendedEvent >= props.totalTicket
+                ? "bg-red-100 text-red-800"
+                : "bg-green-100 text-green-800"
+            }`}
+          >
+            {props.attendedEvent >= props.totalTicket
+              ? "Sold Out"
+              : "Available"}
+          </span>
+        </div>
+
+        <div className="flex flex-1 flex-col p-4">
+          <h1 className="line-clamp-2 text-lg font-bold">{props.title}</h1>
+
+          <p className="mt-2 text-sm text-slate-600">
+            {format(props.eventStartDate, "dd MMMM yyyy")} -{" "}
+            {format(props.eventEndDate, "dd MMMM yyyy")}
+          </p>
+
+          <p className="mt-2 text-xl font-bold">
+            {props.price === 0 ? "FREE" : price(props.price)}
+          </p>
+
+          <div className="mt-4 border-t pt-4">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-8 w-8">
+                <AvatarImage width={100} src={props.organizer.logoUrl || ""} />
+              </Avatar>
+              <p className="text-sm text-slate-600">
+                {props.organizer.organizerName}
+              </p>
             </div>
           </div>
         </div>

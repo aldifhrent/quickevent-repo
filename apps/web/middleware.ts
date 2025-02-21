@@ -14,8 +14,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
-  // Blokir akses ke /organizer jika belum login
-  if (pathname.startsWith("/organizer") && !session?.user.id) {
+  // Blokir akses ke /organizer kecuali untuk /organizer/organizerId
+  if (
+    pathname.startsWith("/organizer") &&
+    !pathname.match(/^\/organizer\/[^/]+$/) &&
+    !session?.user.id
+  ) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
@@ -26,14 +30,16 @@ export async function middleware(request: NextRequest) {
 
   // Blokir akses ke /profile/profile dan /profile/:id jika belum login
   if (
-    (pathname === "/profile/profile" || pathname.startsWith("/profile/")) &&
+    (pathname.startsWith("/profile/")) &&
     !session?.user.id
   ) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
+
   if (pathname === "/event" && !session?.user.id) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
+
   // Blokir akses ke /event/[id]/transactions jika belum login
   const eventTransactionRegex = /^\/event\/[^/]+\/transactions$/;
   if (eventTransactionRegex.test(pathname) && !session?.user.id) {
@@ -52,7 +58,7 @@ export const config = {
   matcher: [
     "/sign-in",
     "/sign-up",
-    "/organizer/:path*",
+    "/organizer/:path*", // /organizer path matcher
     "/dashboard/:path*",
     "/event/:path*",
     "/profile/:path*",

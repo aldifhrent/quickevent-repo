@@ -8,6 +8,7 @@ export default function OrganizedProfile({ event }: { event: Events }) {
         <Avatar>
           <AvatarImage
             src={
+              event.organizer.logoUrl ||
               "https://images.unsplash.com/photo-1737111869094-80ed40daca91?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw2fHx8ZW58MHx8fHx8"
             }
           />

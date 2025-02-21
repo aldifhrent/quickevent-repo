@@ -15,14 +15,16 @@ export default function RightSideMenu({ event }: { event: Events }) {
   const eventEndDate = format(new Date(event.eventEndDate), "HH:mm");
 
   return (
-    <Card className="container h-[250px] w-full lg:w-3/12 mt-16">
-      <div className="flex flex-col items-start p-8">
-        <h1 className="text-nowrap text-xl font-bold">{event.title}</h1>
+    <Card className="h-full w-full  lg:w-6/12 mt-16">
+      <div className="flex flex-col items-start p-4">
+        <h1 className="text-nowrap text-md lg:text-xl font-bold">
+          {event.title}
+        </h1>
         <div className="mt-8 flex flex-col gap-4">
-          <p className="flex items-center gap-1 text-black">
+          <p className="flex items-center gap-1 text-black text-nowrap text-md">
             <Calendar size={20} /> {formattedStartDate} - {formattedEndDate}
           </p>
-          <p className="flex items-center gap-1 text-black">
+          <p className="flex items-center gap-1 text-black ">
             <Clock8 /> {eventStartDate} - {eventEndDate} WIB
           </p>
           <p className="flex items-center gap-1 text-slate-500">

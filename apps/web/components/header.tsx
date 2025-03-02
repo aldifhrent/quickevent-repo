@@ -7,6 +7,7 @@ import Link from "next/link";
 import HeaderMenu from "../components/header.menu";
 import HeaderMobileMenu from "../components/header.mobile.menu";
 import SearchInput from "./input.search";
+import { useSession } from "next-auth/react";
 
 export default function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -15,25 +16,22 @@ export default function Header() {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const { data: session } = useSession();
+
   return (
     <div className="border-b dark:border-b-white">
       <header className="relative flex h-16 items-center justify-between px-4 sm:px-12">
-        <div className="flex items-center gap-8">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.svg"
-              width={100}
-              height={100}
-              alt="Image Logo"
-              className="inline-block h-[100px] w-[50px]"
-            />
-          </Link>
+        <Link href="/">
+          <Image
+            src="/logo.svg"
+            width={50}
+            height={50}
+            alt="Image Logo"
+            className="h-[100px] w-[50px] max-h-[100px] max-w-[50px]"
+          />
+        </Link>
 
-          {/* Search Bar */}
-          <SearchInput />
-        </div>
-
+        <SearchInput />
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
@@ -41,7 +39,6 @@ export default function Header() {
         >
           <Menu size={20} />
         </button>
-
         {/* Mobile Menu */}
         <div
           className={`absolute right-4 top-16 z-10 w-[300px] rounded-lg bg-slate-50 p-4 shadow-2xl transition-all duration-300 ease-in-out dark:bg-white lg:hidden ${
@@ -50,11 +47,9 @@ export default function Header() {
               : "pointer-events-none -translate-y-4 scale-95 opacity-0"
           }`}
         >
-          <HeaderMobileMenu />
+          <HeaderMobileMenu session={session} />
         </div>
-
-        {/* Desktop Navigation */}
-        <HeaderMenu />
+        <HeaderMenu session={session} />
       </header>
     </div>
   );
